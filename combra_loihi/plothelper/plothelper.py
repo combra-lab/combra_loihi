@@ -37,11 +37,15 @@ def MultiRowVoltagePlot(name: str, directory: str, data: np.ndarray, filetype: s
     :param filetype: file type of saved figure
     :return: figure: matplotlib figure
     """
+    if type(data) == list:
+        data = np.array(data).reshape(1, len(data))
     row_num = data.shape[0]
     col_num = data.shape[1]
     x_list = np.arange(col_num)
-    figure_size = (col_num / 500., row_num)
+    figure_size = (col_num / 500., row_num * 2)
     figure, ax = plt.subplots(row_num, 1, sharex='col', figsize=figure_size)
+    if row_num == 1:
+        ax = [ax]
     for num in range(row_num):
         ax[row_num - 1 - num].plot(x_list, data[num, :])
         ax[row_num - 1 - num].set_ylabel(str(num))
@@ -74,6 +78,8 @@ def FiringRateCompute(data: np.ndarray, window: int):
     :return: fr_data: data of firing rates
     :return: fr_x: x axis of firing rates
     """
+    if type(data) == list:
+        data = np.array(data).reshape(1, len(data))
     row_num = data.shape[0]
     col_num = data.shape[1]
     fr_data = np.zeros((row_num, col_num - window))
@@ -83,7 +89,7 @@ def FiringRateCompute(data: np.ndarray, window: int):
     return fr_data, fr_x
 
 
-def FiringRatePlot(name: str, directory: str, data: np.ndarray, filetype: str):
+def FiringRatePlot(name: str, directory: str, data: np.ndarray, filetype: str, window=250):
     """
     Plot firing rate of spike data
 
@@ -91,16 +97,20 @@ def FiringRatePlot(name: str, directory: str, data: np.ndarray, filetype: str):
     :param directory: directory to the file
     :param data: data of the figure in neuron spikes
     :param filetype: file type of saved figure
+    :param window: window size in ms
     :return: figure: matplotlib figure
     """
+    if type(data) == list:
+        data = np.array(data).reshape(1, len(data))
     row_num = data.shape[0]
     col_num = data.shape[1]
-    window = 250
     if col_num < window:
         window = int(col_num / 4)
     fr_data, fr_x = FiringRateCompute(data, window)
     figure_size = (col_num / 500., row_num)
     figure, ax = plt.subplots(row_num, 1, sharex='col', figsize=figure_size)
+    if row_num == 1:
+        ax = [ax]
     for num in range(row_num):
         ax[row_num - 1 - num].plot(fr_x, fr_data[num, :])
         ax[row_num - 1 - num].set_ylabel(str(num))

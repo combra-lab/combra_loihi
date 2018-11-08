@@ -23,7 +23,8 @@ def setupNAN(net: nx.NxNet, sim_time):
                                              [combra.ASTRO_SPIKE_RECEIVER_PROBE.COMPARTMENT_CURRENT,
                                               combra.ASTRO_IP3_INTEGRATOR_PROBE.COMPARTMENT_VOLTAGE,
                                               combra.ASTRO_SIC_GENERATOR_PROBE.COMPARTMENT_VOLTAGE,
-                                              combra.ASTRO_SPIKE_GENERATOR_PROBE.SPIKE])
+                                              combra.ASTRO_SPIKE_GENERATOR_PROBE.SPIKE,
+                                              combra.ASTRO_IP3_INTEGRATOR_PROBE.SPIKE])
     return nan.poisson_spike, post_probes, astro_probes
 
 
@@ -38,7 +39,7 @@ def setupAstro(net):
 
 if __name__ == '__main__':
     net = nx.NxNet()
-    sim_time = 30000
+    sim_time = 7000
     pre_spikes, post_probes, astro_probes = setupNAN(net, sim_time)
     #astro_probes = setupAstro(net)
     net.run(sim_time)
@@ -88,3 +89,7 @@ if __name__ == '__main__':
     fileName = "combra_loihi_nan_test.png"
     print("No display available, saving to file " + fileName + ".")
     fig.savefig(fileName)
+    """
+    generate SIC SG firing rate plot
+    """
+    figure2 = combra.FiringRatePlot('Burst Spike Generator FR plot', '', astro_probes[3].data, 'png')
