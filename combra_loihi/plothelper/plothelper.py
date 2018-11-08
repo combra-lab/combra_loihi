@@ -107,7 +107,7 @@ def FiringRatePlot(name: str, directory: str, data: np.ndarray, filetype: str, w
     if col_num < window:
         window = int(col_num / 4)
     fr_data, fr_x = FiringRateCompute(data, window)
-    figure_size = (col_num / 500., row_num)
+    figure_size = (col_num / 500., row_num * 2)
     figure, ax = plt.subplots(row_num, 1, sharex='col', figsize=figure_size)
     if row_num == 1:
         ax = [ax]

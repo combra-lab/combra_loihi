@@ -19,14 +19,14 @@ class Astrocyte(AstrocytePrototypeBase):
                  srMaxActivity=127,
                  srHomeostasisGain=0,
                  srEnableHomeostasis=0,
-                 ip3VThMant=20000,
+                 ip3VThMant=15000,
                  ip3CurrentDecay=int(2 ** 12),
                  ip3VoltageDecay=1,
                  sicCurrentDecay=int(1 / 100 * 2 ** 12),
-                 sicVoltageDecay=int(1 / 40 * 2 ** 12),
-                 sgVThMant=100,
+                 sicVoltageDecay=int(1 / 100 * 2 ** 12),
+                 sgVThMant=5000,
                  sgCurrentDecay=int(1 / 10 * 2 ** 12),
-                 sgVoltageDecay=int(1 / 4 * 2 ** 12),
+                 sgVoltageDecay=int(1 / 100 * 2 ** 12),
                  sr2ip3Weight=20,
                  ip32sicWeight=20):
         super().__init__(net,
@@ -163,7 +163,7 @@ class Astrocyte(AstrocytePrototypeBase):
             weight=w
         )
 
-    def connectOutputNeurons(self, outputs, num, connectionMask=1, weight=10):
+    def connectOutputNeurons(self, outputs, num, connectionMask=1, weight=30):
         """
         connection Postsynaptic neurons with astrocyte
 

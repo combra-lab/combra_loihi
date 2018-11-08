@@ -20,7 +20,7 @@ def setupNAN(net: nx.NxNet, sim_time):
     """
     nan = combra.FeedforwardNAN(net, sim_time=sim_time)
     post_probes, astro_probes = nan.probeNAN([nx.ProbeParameter.SPIKE],
-                                             [combra.ASTRO_SPIKE_RECEIVER_PROBE.COMPARTMENT_CURRENT,
+                                             [combra.ASTRO_SPIKE_RECEIVER_PROBE.COMPARTMENT_VOLTAGE,
                                               combra.ASTRO_IP3_INTEGRATOR_PROBE.COMPARTMENT_VOLTAGE,
                                               combra.ASTRO_SIC_GENERATOR_PROBE.COMPARTMENT_VOLTAGE,
                                               combra.ASTRO_SPIKE_GENERATOR_PROBE.SPIKE,
@@ -92,4 +92,4 @@ if __name__ == '__main__':
     """
     generate SIC SG firing rate plot
     """
-    figure2 = combra.FiringRatePlot('Burst Spike Generator FR plot', '', astro_probes[3].data, 'png')
+    figure2 = combra.FiringRatePlot('Burst Spike Generator FR plot', '', astro_probes[3].data, 'png', window=30)
