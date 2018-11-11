@@ -40,14 +40,14 @@ if __name__ == '__main__':
     pre_neuron_cnt = 10
     post_neuron_cnt = 10
 
-    # Create pre-synaptic neuron (spike generator)
+    # Create pre-synaptic neurons (spike generator)
     pre_synaptic_neurons = net.createSpikeGenProcess(pre_neuron_cnt)
     input_spike_times = gen_rand_spikes(pre_neuron_cnt, sim_time, 10)
     pre_synaptic_neurons.addSpikes(
         spikeInputPortNodeIds=[num for num in range(pre_neuron_cnt)],
         spikeTimes=input_spike_times)
 
-    # Create post-synaptic neuron
+    # Create post-synaptic neurons
     post_neuron_proto = nx.CompartmentPrototype(
         vThMant=10,
         compartmentCurrentDecay=int(1/10*2**12),
