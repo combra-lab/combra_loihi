@@ -1,3 +1,29 @@
+"""
+MIT License
+
+Copyright (c) 2018 Guangzhi Tang
+Copyright (c) 2018 Arpit Shah
+Copyright (c) 2018 Computational Brain Lab, Computer Science Department, Rutgers University
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+"""
+
 import os
 import matplotlib as mpl
 haveDisplay = "DISPLAY" in os.environ
@@ -28,20 +54,10 @@ def setupNAN(net: nx.NxNet, sim_time):
     return nan.poisson_spike, post_probes, astro_probes
 
 
-def setupAstro(net):
-    astro = combra.Astrocyte(net)
-    astro_probes = astro.probe([combra.ASTRO_SPIKE_RECEIVER_PROBE.SPIKE,
-                                combra.ASTRO_IP3_INTEGRATOR_PROBE.COMPARTMENT_VOLTAGE,
-                                combra.ASTRO_SIC_GENERATOR_PROBE.COMPARTMENT_VOLTAGE,
-                                combra.ASTRO_SPIKE_GENERATOR_PROBE.SPIKE])
-    return astro_probes
-
-
 if __name__ == '__main__':
     net = nx.NxNet()
     sim_time = 7000
     pre_spikes, post_probes, astro_probes = setupNAN(net, sim_time)
-    #astro_probes = setupAstro(net)
     net.run(sim_time)
     net.disconnect()
     """
@@ -75,9 +91,10 @@ if __name__ == '__main__':
 
     ax4 = plt.subplot(6, 1, 5)
     ax4.set_xlim(0, sim_time)
-    astro_probes[3].plot()
+    fr_data, fr_x = combra.FiringRateComputeGap(astro_probes[3].data)
+    ax4.plot(fr_x, fr_data[0, :])
     plt.xlabel('time (ms)')
-    plt.title('Astrocyte compartment 4: Spike generator spikes')
+    plt.title('Astrocyte compartment 4: Spike generator firing rate')
 
     ax5 = plt.subplot(6, 1, 6)
     ax5.set_xlim(0, sim_time)
@@ -86,10 +103,6 @@ if __name__ == '__main__':
     generator plot
     """
     plt.tight_layout()
-    fileName = "combra_loihi_nan_test.png"
+    fileName = "example4_nan"
     print("No display available, saving to file " + fileName + ".")
-    fig.savefig(fileName)
-    """
-    generate SIC SG firing rate plot
-    """
-    figure2 = combra.FiringRatePlot('Burst Spike Generator FR plot', '', astro_probes[3].data, 'png', window=30)
+    fig.savefig(fileName+'.png', format='png')
