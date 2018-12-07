@@ -8,4 +8,4 @@
 * python 3.5.2
 * NxSDK 0.7
 
-For more information, please go to [combra_loihi WiKi](https://github.com/michaelgzt/combra_loihi/wiki)
+For more information, please go to [combra_loihi WiKi](https://github.com/combra-lab/combra_loihi/wiki)
