@@ -181,7 +181,7 @@ class Astrocyte(AstrocytePrototypeBase):
         """
         Create connection
         """
-        input_conn_prototype = nx.ConnectionPrototype(numWeightBits=8)
+        input_conn_prototype = nx.ConnectionPrototype(numWeightBits=8, signMode=2)
         self.astrocyte_input_conn = inputs.connect(
             self.astrocyte_setup[0],
             prototype=input_conn_prototype,
@@ -213,7 +213,7 @@ class Astrocyte(AstrocytePrototypeBase):
         """
         Create connection
         """
-        output_conn_prototype = nx.ConnectionPrototype(numWeightBits=8)
+        output_conn_prototype = nx.ConnectionPrototype(numWeightBits=8, signMode=2)
         self.astrocyte_output_conn = self.astrocyte_setup[-1].connect(
             outputs,
             prototype=output_conn_prototype,
