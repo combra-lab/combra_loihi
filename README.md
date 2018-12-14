@@ -1,6 +1,6 @@
 # combra_loihi
 
-**combra_loihi** is a neuromorphic computing library for **Computational Astrocyte** and more developed specifically for Intel's Loihi neuromorphic processor. The library is developed by [Computational Brain Lab](http://combra.cs.rutgers.edu/) (ComBra) at Rutgers University.
+**combra_loihi** is a neuromorphic computing library for **Computational Astrocyence** developed specifically for Intel's Loihi neuromorphic processor. The library is developed by [Computational Brain Lab](http://combra.cs.rutgers.edu/) (ComBra) at Rutgers University.
 
 ### Version 0.1 (11/2018)
 
