@@ -33,7 +33,7 @@ import numpy as np
 class Astrocyte(AstrocytePrototypeBase):
     def __init__(self,
                  net: nx.NxNet,
-                 ip3_sensitivity=-1,
+                 ip3_sensitivity=None,
                  sic_amplitude=None,
                  sic_window=None,
                  srVThMant=100,
@@ -54,7 +54,8 @@ class Astrocyte(AstrocytePrototypeBase):
                  sgCurrentDecay=int(1 / 10 * 2 ** 12),
                  sgVoltageDecay=int(1 / 100 * 2 ** 12),
                  sr2ip3Weight=20,
-                 ip32sicWeight=20):
+                 ip32sicWeight=20,
+                 DEBUG=False):
         super().__init__(net,
                          ip3_sensitivity,
                          sic_amplitude,
@@ -77,7 +78,8 @@ class Astrocyte(AstrocytePrototypeBase):
                          sgCurrentDecay,
                          sgVoltageDecay,
                          sr2ip3Weight,
-                         ip32sicWeight)
+                         ip32sicWeight,
+                         DEBUG)
 
         # declare internal properties
         # ---------------------------------------------------
