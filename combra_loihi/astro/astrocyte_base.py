@@ -27,6 +27,7 @@ SOFTWARE.
 """
 This module contains the base class for the Astrocyte class.
 """
+import os
 import numpy as np
 import nxsdk.api.n2a as nx
 
@@ -34,7 +35,22 @@ import nxsdk.api.n2a as nx
 class AstrocyteInterfaceBase():
     # --------------------------------------
     # Validators
-    pass
+    @staticmethod
+    def _validate_sic_window(val):
+        assert 0 <= val <= 608, \
+            "Illegal SIC window size = " + str(val) + " ms. " + \
+            "Must be an integer >= 0 and <= 608. For a value greater than 608 ms, please configure manually."
+
+    @staticmethod
+    def _validate_sic_firing_rate(val):
+        assert 0 <= val <= 356, \
+            "Illegal SIC maximum firing rate = " + str(val) + " Hz. " + \
+            "Must be an integer >= 0 and <= 356. For a value greater than 356 Hz., please configure manually."
+
+    @staticmethod
+    def _validate_ip3_sensitivity(val):
+        if not isinstance(val, int) or val < 1 or val > 100:
+            raise ValueError("IP3 Sensitivity value must be an integer between 1 and 100 (inclusive)")
 
 
 class AstrocytePrototypeBase(AstrocyteInterfaceBase):
@@ -61,7 +77,8 @@ class AstrocytePrototypeBase(AstrocyteInterfaceBase):
                  sgCurrentDecay,
                  sgVoltageDecay,
                  sr2ip3Weight,
-                 ip32sicWeight):
+                 ip32sicWeight,
+                 DEBUG=False):
         """
         Initialize the parameters of the astrocyte model.
 
@@ -102,10 +119,21 @@ class AstrocytePrototypeBase(AstrocyteInterfaceBase):
 
         # Smart Setup Properties
         # ---------------------------------------------------
-        self.ip3Sensitivity = ip3_sensitivity
-        self.sicAmplitude = sic_amplitude
-        self.sicWindow = sic_window
-        # ---------------------------------------------------
+        if sic_window is not None and sic_amplitude is not None:
+            if DEBUG:
+                print("DEBUG: Configuring based on provided window size and maximum firing rate")
+            self._validate_sic_window(sic_window)
+            self._validate_sic_firing_rate(sic_amplitude)
+            self.ip32sicWeight, self.sicCurrentDecay = AstrocytePrototypeBase._calculate_sic_props(sic_amplitude,
+                                                                                                   sic_window)
+            self.sicCurrentDecay = int(self.sicCurrentDecay * 2 ** 12)
+            self._sicWindow = sic_window
+            self._sicAmplitude = sic_amplitude
+
+        if ip3_sensitivity is not None:
+            if DEBUG:
+                print("DEBUG: Configuring based on provided IP3 Sensitivity level")
+                self.ip3Sensitivity = ip3_sensitivity
 
     @property
     def ip3Sensitivity(self):
@@ -142,7 +170,10 @@ class AstrocytePrototypeBase(AstrocyteInterfaceBase):
         :param val: ip3 spike time in ms
         :return:
         """
+
+        self._validate_ip3_sensitivity(val)
         self._ip3Sensitivity = val
+        self.sr2ip3Weight = self._ip3Sensitivity
 
     @sicAmplitude.setter
     def sicAmplitude(self, val):
@@ -152,7 +183,12 @@ class AstrocytePrototypeBase(AstrocyteInterfaceBase):
         :param val: sic firing rate in hz
         :return:
         """
+        self._validate_sic_firing_rate(val)
         self._sicAmplitude = val
+
+        self.ip32sicWeight, self.sicCurrentDecay = AstrocytePrototypeBase._calculate_sic_props(self._sicAmplitude,
+                                                                                               self._sicWindow)
+        self.sicCurrentDecay = int(self.sicCurrentDecay * 2 ** 12)
 
     @sicWindow.setter
     def sicWindow(self, val):
@@ -162,4 +198,33 @@ class AstrocytePrototypeBase(AstrocyteInterfaceBase):
         :param val: sic firing window in ms
         :return:
         """
+        self._validate_sic_window(val)
         self._sicWindow = val
+
+        self.ip32sicWeight, self.sicCurrentDecay = AstrocytePrototypeBase._calculate_sic_props(self._sicAmplitude,
+                                                                                               self._sicWindow)
+        self.sicCurrentDecay = int(self.sicCurrentDecay * 2 ** 12)
+
+    @staticmethod
+    def _calculate_sic_props(firing_rate, window_size):
+        """
+        Calculate the optimal values to achieve closest specifications to those provided for the SIC.
+
+        :param firing_rate:
+        :param window_size:
+        :return: ip32sicWeight, sicCurrentDecay
+        """
+        configs = np.load(os.path.join(os.path.dirname(__file__), "sic_data_table.npy"))
+
+        optimal_config = configs[15]
+        min_diff = AstrocytePrototypeBase._calc_diff(optimal_config[2], optimal_config[3], firing_rate, window_size)
+        for config in configs:
+            cost = AstrocytePrototypeBase._calc_diff(config[2], config[3], firing_rate, window_size)
+            if min_diff > cost:
+                min_diff = cost
+                optimal_config = config
+        return optimal_config[0], optimal_config[1]
+
+    @staticmethod
+    def _calc_diff(config_fr, config_ws, firing_rate, window_size):
+        return np.power(config_fr - firing_rate, 2) + np.power(config_ws - window_size, 2)

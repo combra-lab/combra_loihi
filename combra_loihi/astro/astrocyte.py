@@ -33,9 +33,9 @@ import numpy as np
 class Astrocyte(AstrocytePrototypeBase):
     def __init__(self,
                  net: nx.NxNet,
-                 ip3_sensitivity=-1,
-                 sic_amplitude=-1,
-                 sic_window=-1,
+                 ip3_sensitivity=None,
+                 sic_amplitude=None,
+                 sic_window=None,
                  srVThMant=100,
                  srCurrentDecay=int(1 / 10 * 2 ** 12),
                  srVoltageDecay=int(1 / 4 * 2 ** 12),
@@ -54,7 +54,8 @@ class Astrocyte(AstrocytePrototypeBase):
                  sgCurrentDecay=int(1 / 10 * 2 ** 12),
                  sgVoltageDecay=int(1 / 100 * 2 ** 12),
                  sr2ip3Weight=20,
-                 ip32sicWeight=20):
+                 ip32sicWeight=20,
+                 DEBUG=False):
         super().__init__(net,
                          ip3_sensitivity,
                          sic_amplitude,
@@ -77,7 +78,8 @@ class Astrocyte(AstrocytePrototypeBase):
                          sgCurrentDecay,
                          sgVoltageDecay,
                          sr2ip3Weight,
-                         ip32sicWeight)
+                         ip32sicWeight,
+                         DEBUG)
 
         # declare internal properties
         # ---------------------------------------------------
@@ -181,7 +183,7 @@ class Astrocyte(AstrocytePrototypeBase):
         """
         Create connection
         """
-        input_conn_prototype = nx.ConnectionPrototype(numWeightBits=8)
+        input_conn_prototype = nx.ConnectionPrototype(numWeightBits=8, signMode=2)
         self.astrocyte_input_conn = inputs.connect(
             self.astrocyte_setup[0],
             prototype=input_conn_prototype,
@@ -213,7 +215,7 @@ class Astrocyte(AstrocytePrototypeBase):
         """
         Create connection
         """
-        output_conn_prototype = nx.ConnectionPrototype(numWeightBits=8)
+        output_conn_prototype = nx.ConnectionPrototype(numWeightBits=8, signMode=2)
         self.astrocyte_output_conn = self.astrocyte_setup[-1].connect(
             outputs,
             prototype=output_conn_prototype,
