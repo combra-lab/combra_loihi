@@ -9,3 +9,19 @@
 * NxSDK 0.7
 
 For more information, please go to [combra_loihi WiKi](https://github.com/combra-lab/combra_loihi/wiki)
+
+## Related Publication ##
+
+Guangzhi Tang, Ioannis E Polykretis, Vladimir A Ivanov, Arpit Shah, Konstantinos P Michmizos. 
+"Introducing astrocytes on a neuromorphic processor: Synchronization, local plasticity and edge of chaos." 
+Neuro-inspired Computational Elements Workshop (NICE 2019) [pdf](https://arxiv.org/pdf/1907.01620.pdf)
+
+```bibtex
+@inproceedings{tang2019introducing,
+  title={Introducing astrocytes on a neuromorphic processor: Synchronization, local plasticity and edge of chaos},
+  author={Tang, Guangzhi and Polykretis, Ioannis E and Ivanov, Vladimir A and Shah, Arpit and Michmizos, Konstantinos P},
+  booktitle={Proceedings of the 7th Annual Neuro-inspired Computational Elements Workshop},
+  pages={1--9},
+  year={2019}
+}
+```
