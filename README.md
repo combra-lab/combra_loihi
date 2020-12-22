@@ -14,7 +14,7 @@ For more information, please go to [combra_loihi WiKi](https://github.com/combra
 
 Guangzhi Tang, Ioannis E Polykretis, Vladimir A Ivanov, Arpit Shah, Konstantinos P Michmizos. 
 "Introducing astrocytes on a neuromorphic processor: Synchronization, local plasticity and edge of chaos." 
-Neuro-inspired Computational Elements Workshop (NICE 2019) [pdf](https://arxiv.org/pdf/1907.01620.pdf)
+Neuro-inspired Computational Elements Workshop (NICE 2019), Albany, NY, USA. [pdf](https://arxiv.org/pdf/1907.01620.pdf)
 
 ```bibtex
 @inproceedings{tang2019introducing,
